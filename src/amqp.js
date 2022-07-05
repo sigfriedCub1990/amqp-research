@@ -1,7 +1,7 @@
-const { curry } = require('ramda')
+const R = require('ramda')
 const { Connection, ConnectionEvents, ReceiverEvents } = require('rhea-promise')
 
-let processIncomingMessage = curry((app, context) => {
+let processIncomingMessage = R.curry((app, context) => {
   let Logger = app.get('logger')
   try {
     Logger.info('Processing incoming message from ActiveMQ')
@@ -53,6 +53,7 @@ let initializeAMQPConnection = async (app) => {
     return initializeAMQPConsumer(app)
       .then(() => {
         Logger.info('Consumer successfully initialized')
+        return app
       })
       .catch((error) => {
         Logger.error(`Spawn live consumer error: ${error.message}`)
@@ -114,7 +115,7 @@ let initializeAMQPConsumer = async (app) => {
   }
 }
 
-const bindAMQOnExitListeners = (app) => {
+const bindAMQOnExitListeners = R.curry((app) => {
   const connection = app.get('amqp-connection')
   const Logger = app.get('logger')
   process.once('exit', () => {
@@ -130,9 +131,12 @@ const bindAMQOnExitListeners = (app) => {
       connection.close()
     }
   })
-}
+})
 
-module.exports = {
-  initializeAMQPConnection,
-  bindAMQOnExitListeners,
+module.exports = (app) => {
+  // prettier-ignore
+  R.pipe(
+    initializeAMQPConnection,
+    R.andThen(bindAMQOnExitListeners)
+  )(app)
 }
