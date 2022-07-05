@@ -28,5 +28,14 @@
       "passwordField": "password"
     }
   },
+  "amqp": {
+    "host": "localhost",
+    "port": 5672,
+    "user": "luminai",
+    "password": "luminai",
+    "queue": "rubens_queue",
+    "transport": "tcp",
+    "timeout": 60000
+  },
   "nedb": "../data"
 }
