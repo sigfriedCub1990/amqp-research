@@ -10,7 +10,7 @@ const configuration = require('@feathersjs/configuration')
 const express = require('@feathersjs/express')
 const socketio = require('@feathersjs/socketio')
 
-const { initializeAMQPConnection, bindAMQOnExitListeners } = require('../ampq')
+const { initializeAMQPConnection, bindAMQOnExitListeners } = require('./amqp')
 
 const app = express(feathers())
 // Load app configuration
