@@ -1,20 +1,31 @@
 import * as R from 'ramda'
 import { Connection, ConnectionEvents, ReceiverEvents } from 'rhea-promise'
 
-let processIncomingMessage = R.curry((app, context) => {
-  let Logger = app.get('logger')
-  try {
-    Logger.info('Processing incoming message from ActiveMQ')
+let processIncomingMessage = R.curry(
+  (
+    app,
+    {
+      _context: {
+        message: { body },
+      },
+    }
+  ) => {
+    let Logger = app.get('logger')
+    try {
+      Logger.info('Processing incoming message from ActiveMQ')
 
-    console.log(context._context.message.body)
-    let messageBody = JSON.parse(context._context.message.body)
-    Logger.info(`Message body is: ${messageBody} `)
-  } catch (error) {
-    Logger.error(
-      `An exception happened while processing AMQ incoming message: ${error.message}`
-    )
+      Logger.info(body)
+      let messageBody = JSON.parse(body)
+      Logger.info(
+        `Updating runId: ${messageBody['runId']} to ${messageBody['percent']}%`
+      )
+    } catch (error) {
+      Logger.error(
+        `An exception happened while processing AMQ incoming message: ${error.message}`
+      )
+    }
   }
-})
+)
 
 let initializeAMQPConnection = async (app) => {
   try {
