@@ -1,6 +1,8 @@
 import { Connection, SenderEvents } from 'rhea-promise'
 import * as R from 'ramda'
 
+const SEND_INTERVAL = 10_000
+
 let amqpSettings = {
   hostname: 'localhost',
   port: 5672,
@@ -62,11 +64,49 @@ let startProducer = async (connection) => {
 }
 
 let produceMessages = (sender) => {
-  sender.send({
-    body: JSON.stringify({
-      message: 'Hello there',
-    }),
-  })
+  let runs = new Map()
+
+  let sendMessage = () => {
+    let runId = Math.floor(Math.random() * 10)
+    console.log(
+      `Current runs: ${[...runs.keys()].length ? `${[...runs.keys()]}` : 0}`
+    )
+
+    if (runs.has(runId)) {
+      let { percent } = runs.get(runId)
+      if (percent + 15 >= 100) {
+        sender.send({
+          body: JSON.stringify({
+            runId,
+            percent: 100,
+          }),
+        })
+        runs.delete(runId)
+      } else {
+        let updatedPercent = percent + 15
+        runs.set(runId, { percent: updatedPercent })
+        sender.send({
+          body: JSON.stringify({
+            runId,
+            percent: updatedPercent,
+          }),
+        })
+      }
+    } else {
+      runs.set(runId, {
+        percent: 0,
+      })
+
+      sender.send({
+        body: JSON.stringify({
+          runId,
+          percent: 0,
+        }),
+      })
+    }
+  }
+
+  setInterval(sendMessage, SEND_INTERVAL)
 }
 
 function main() {
