@@ -27,7 +27,9 @@
   "scripts": {
     "test": "npm run lint && npm run jest",
     "lint": "eslint src/. test/. --config .eslintrc.json --fix",
-    "dev": "nodemon src/",
+    "dev:consumer": "nodemon src/",
+    "dev:producer": "nodemon producer",
+    "dev": "concurrently npm:dev:*",
     "start": "node src/",
     "jest": "jest --forceExit"
   },
@@ -47,6 +49,7 @@
     "@feathersjs/socketio": "^4.5.15",
     "@seald-io/nedb": "^3.0.0",
     "compression": "^1.7.4",
+    "concurrently": "^7.2.2",
     "cors": "^2.8.5",
     "eslint-plugin-prettier": "^4.2.1",
     "feathers-nedb": "^6.0.0",
