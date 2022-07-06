@@ -1,14 +1,14 @@
-const NeDB = require('@seald-io/nedb');
-const path = require('path');
+import NeDB from '@seald-io/nedb'
+import path from 'path'
 
-module.exports = function (app) {
-  const dbPath = app.get('nedb');
+export default function (app) {
+  const dbPath = app.get('nedb')
   const Model = new NeDB({
     filename: path.join(dbPath, 'users.db'),
-    autoload: true
-  });
+    autoload: true,
+  })
 
-  Model.ensureIndex({ fieldName: 'email', unique: true });
+  Model.ensureIndex({ fieldName: 'email', unique: true })
 
-  return Model;
-};
+  return Model
+}

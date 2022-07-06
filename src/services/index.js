@@ -1,5 +1,5 @@
-const users = require('./users/users.service.js');
+import users from './users/users.service.js'
 // eslint-disable-next-line no-unused-vars
-module.exports = function (app) {
-  app.configure(users);
-};
+export default function (app) {
+  app.configure(users)
+}

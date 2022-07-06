@@ -1,30 +1,29 @@
-const path = require('path')
-const favicon = require('serve-favicon')
-const compress = require('compression')
-const helmet = require('helmet')
-const cors = require('cors')
-const logger = require('./logger')
+import path from 'path'
+import favicon from 'serve-favicon'
+import compress from 'compression'
+import helmet from 'helmet'
+import cors from 'cors'
+import logger from './logger.js'
 
-const feathers = require('@feathersjs/feathers')
-const configuration = require('@feathersjs/configuration')
-const express = require('@feathersjs/express')
-const socketio = require('@feathersjs/socketio')
+import feathers from '@feathersjs/feathers'
+import configuration from '@feathersjs/configuration'
+import express from '@feathersjs/express'
+import socketio from '@feathersjs/socketio'
 
-const initializeAMQ = require('./amqp')
+import initializeAMQ from './amqp.js'
 
-const app = express(feathers())
+let app = express(feathers())
 // Load app configuration
 app.configure(configuration())
 
 app.configure(logger)
 app.configure(initializeAMQ)
 
-const middleware = require('./middleware')
-const services = require('./services')
-const appHooks = require('./app.hooks')
-const channels = require('./channels')
+import services from './services/index.js'
+import appHooks from './app.hooks.js'
+import channels from './channels.js'
 
-const authentication = require('./authentication')
+import authentication from './authentication.js'
 
 // Enable security, CORS, compression, favicon and body parsing
 app.use(
@@ -44,8 +43,6 @@ app.use('/', express.static(app.get('public')))
 app.configure(express.rest())
 app.configure(socketio())
 
-// Configure other middleware (see `middleware/index.js`)
-app.configure(middleware)
 app.configure(authentication)
 // Set up our services (see `services/index.js`)
 app.configure(services)
@@ -58,4 +55,4 @@ app.use(express.errorHandler({ logger }))
 
 app.hooks(appHooks)
 
-module.exports = app
+export default app

@@ -1,6 +1,6 @@
-const { createLogger, format, transports } = require('winston')
+import { createLogger, format, transports } from 'winston'
 
-module.exports = (app) => {
+export default (app) => {
   // Configure the Winston logger. For the complete documentation see https://github.com/winstonjs/winston
   const logger = createLogger({
     // To see more detailed errors, change this to 'debug'

@@ -1,5 +1,3 @@
-const { Service } = require('feathers-nedb');
+import { Service } from 'feathers-nedb'
 
-exports.Users = class Users extends Service {
-  
-};
+export default class Users extends Service {}

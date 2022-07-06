@@ -1,5 +1,5 @@
-const R = require('ramda')
-const { Connection, ConnectionEvents, ReceiverEvents } = require('rhea-promise')
+import * as R from 'ramda'
+import { Connection, ConnectionEvents, ReceiverEvents } from 'rhea-promise'
 
 let processIncomingMessage = R.curry((app, context) => {
   let Logger = app.get('logger')
@@ -133,7 +133,7 @@ const bindAMQOnExitListeners = R.curry((app) => {
   })
 })
 
-module.exports = (app) => {
+export default (app) => {
   // prettier-ignore
   R.pipe(
     initializeAMQPConnection,
